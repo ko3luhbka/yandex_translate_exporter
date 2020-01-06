@@ -2,3 +2,5 @@
 .python-version
 .vscode
 geckodriver.log
+__pycache__
+*.html
