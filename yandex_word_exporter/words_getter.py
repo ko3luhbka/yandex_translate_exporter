@@ -12,8 +12,8 @@ from selenium.webdriver.support import expected_conditions
 # Path to Selenium Webdriver
 DRIVER_PATH = os.path.abspath('geckodriver')
 # Credentials to authenticate to Yandex.Translate service
-EMAIL = ''
-PASSWORD = ''
+EMAIL = 'ko3luhbka@gmail.com'
+PASSWORD = 'Eeepc1215b'
 # File where parsed page is saved to
 HTML_SOURCE = 'page_source.html'
 # Resulting CSV file
@@ -139,10 +139,7 @@ def convert_dict_to_csv(words_dict, csv_file=CSV_FILE):
 
 def main(html_source=HTML_SOURCE):
     if not all([EMAIL, PASSWORD]):
-        raise ValueError(
-            'Email and password should not be empty!\n'
-            'Either specify them in config.py or in script positional args'
-        )
+        raise ValueError('Email and password should not be empty!')
     if os.path.exists(html_source):
         print('HTML file is already exist, skipping page scrapping')
     else:
