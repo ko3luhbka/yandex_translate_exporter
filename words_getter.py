@@ -1,5 +1,6 @@
 import time
 
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -12,8 +13,6 @@ import config
 def init_webdriver():
     options = webdriver.FirefoxOptions()
     options.add_argument('--ignore-certificate-errors')
-    # options.add_argument('--incognito')
-    # options.add_argument('--headless')
     return webdriver.Firefox(executable_path=config.driver_path)
 
 
@@ -32,12 +31,12 @@ def _fill_in_and_hit_return(
 
 
 def auth_via_google(
-    driver: webdriver.Firefox,
-    email: str = config.email,
-    password: str = config.password
+    driver,
+    email=config.email,
+    password=config.password
 ):
     """
-    I don't have Yandex account so authenticate using Google account
+    I don't have Yandex account so authenticate with Google
     """
     wait = WebDriverWait(driver, 10)
     driver.get(config.base_url)
@@ -64,10 +63,13 @@ def auth_via_google(
     time.sleep(5)
 
 
-def get_words_from_collection(
-    driver: webdriver.Firefox,
-    collection_name: str = config.collection_name
+def get_html_source(
+    driver,
+    collection_name=config.collection_name
 ):
+    """
+    Load page with user defined words collections and get its source code
+    """
     auth_via_google(driver=driver)
     users_collections = driver.find_element_by_id('collectionListContent')
     collections = users_collections.find_element_by_tag_name('ul')
@@ -81,3 +83,27 @@ def get_words_from_collection(
     source = driver.page_source
     driver.close()
     return source
+
+
+def parse_html(html_file):
+    """
+    Walk through HTML source code building dict {word: translation} and
+    adding it to list for further CSV converting
+    """
+    with open(html_file) as f:
+        soup = BeautifulSoup(f, 'html.parser')
+    word_trans_list = []
+    for item in soup.find_all(class_='record-item'):
+        word = item.find(class_='record-item_text')
+        translation = item.find(class_='record-item_translation')
+        if word:
+            word_str = word.find('div', attrs={'dir': 'ltr'}).string
+        if translation:
+            trans_str = translation.find('div', attrs={'dir': 'ltr'}).string
+        word_trans_list.append(
+            {
+                'word': word_str.strip(),
+                'translation': trans_str.strip()
+            }
+        )
+    return word_trans_list

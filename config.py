@@ -1,11 +1,11 @@
-import argparse
 import os
 
 
 # Path to Selenium Webdriver
 driver_path = os.path.abspath('geckodriver')
 
-# Creds to authenticate using Google
+# Credentials to authenticate using Google. May be also specified
+# as positional arguments when running words_getter.py
 email = ''
 password = ''
 
