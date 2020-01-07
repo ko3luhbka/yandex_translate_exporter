@@ -12,8 +12,8 @@ from selenium.webdriver.support import expected_conditions
 # Path to Selenium Webdriver
 DRIVER_PATH = os.path.abspath('geckodriver')
 # Credentials to authenticate to Yandex.Translate service
-EMAIL = 'ko3luhbka@gmail.com'
-PASSWORD = 'Eeepc1215b'
+EMAIL = ''
+PASSWORD = ''
 # File where parsed page is saved to
 HTML_SOURCE = 'page_source.html'
 # Resulting CSV file
